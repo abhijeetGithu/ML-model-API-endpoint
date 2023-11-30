@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Input</title>
+</head>
+<body>
+    <form id="predictionForm">
+        <textarea id="inputData" rows="6" cols="50">
+        </textarea>
+        <br>
+        <button type="button" onclick="predict()">Predict</button>
+        <div id="predictionResult"></div>
+    </form>
+
+    <script>
+        function predict() {
+            var data = document.getElementById('inputData').value;
+            var xhr = new XMLHttpRequest();
+            var url = 'http://127.0.0.1:12345/predict'; // Replace with your server's URL
+
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        displayPrediction(response.prediction);
+                    } else {
+                        alert('Error: ' + xhr.status);
+                    }
+                }
+            };
+
+            xhr.send(data);
+        }
+
+        function displayPrediction(prediction) {
+            var resultDiv = document.getElementById('predictionResult');
+            resultDiv.textContent = 'Prediction: ' + JSON.stringify(prediction);
+
+        }
+    </script>
+</body>
+</html>
